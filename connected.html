@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연결된 홈페이지</title>
+    <style>
+        body {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        #studentInfo {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        #studentInfo ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        #studentInfo li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="studentInfo">
+        <h1>학생 정보</h1>
+        <ul>
+            <li id="connectedName"></li>
+            <li id="connectedSchool"></li>
+            <li id="connectedGrade"></li>
+            <li id="connectedRoom"></li>
+            <li id="connectedNumber"></li>
+        </ul>
+    </div>
+
+    <script>
+        const connectedName = document.getElementById('connectedName');
+        const connectedSchool = document.getElementById('connectedSchool');
+        const connectedGrade = document.getElementById('connectedGrade');
+        const connectedRoom = document.getElementById('connectedRoom');
+        const connectedNumber = document.getElementById('connectedNumber');
+
+        const updateStudentInfo = () => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `http://127.0.0.1:5500/connected.html/update-student-info?name=${userInfo.name}&school=${userInfo.school}&grade=${userInfo.grade}&room=${userInfo.room}&number=${userInfo.number}`, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    connectedName.textContent = `Name: ${response.name}`;
+                    connectedSchool.textContent = `School: ${response.school}`;
+                    connectedGrade.textContent = `Grade: ${response.grade}`;
+                    connectedRoom.textContent = `Room: ${response.room}`;
+                    connectedNumber.textContent = `Number: ${response.number}`;
+                }
+            };
+            xhr.send();
+        };
+
+        setInterval(updateStudentInfo, 1000); 
+        // 최초 로딩시 학생 정보 업데이트
+        updateStudentInfo();
+    </script>
+</body>
+</html>
