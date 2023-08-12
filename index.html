@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    #signupContainer {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      text-align: center;
+      width: 800px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="signupContainer">
+    <h1>대진페이 QR발급</h1>
+    <form id="signupForm">
+      <label for="name">이름:</label>
+      <input type="text" id="name" required><br>
+      <label for="school">학교:</label>
+      <input type="text" id="school" value="ILSAN DAEJIN HIGH SCHOOL" readonly><br>
+      <label for="grade">학년:</label>
+      <input type="text" id="grade" required><br>
+      <label for="room">반:</label>
+      <input type="text" id="room" required><br>
+      <label for="number">번호:</label>
+      <input type="text" id="number" required><br>
+      <button type="submit">대진페이 QR발급하기</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // 사용자가 입력한 정보 가져오기
+      const name = document.getElementById("name").value;
+      const school = document.getElementById("school").value;
+      const grade = document.getElementById("grade").value;
+      const room = document.getElementById("room").value;
+      const number = document.getElementById("number").value;
+
+      // 학생 정보를 객체로 저장
+      const studentInfo = {
+        name: name,
+        school: school,
+        grade: grade,
+        room: room,
+        number: number
+      };
+
+      // 학생 정보를 문자열로 변환하여 QR 코드 생성
+      const studentInfoString = JSON.stringify(studentInfo);
+      localStorage.setItem("studentInfo", studentInfoString);
+
+      // QR 코드로 생성된 학생증 페이지로 이동
+      window.location.href = "studentID.html";
+    });
+  </script>
+</body>
+</html>

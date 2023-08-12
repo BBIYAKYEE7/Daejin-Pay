@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>무인 계산대 화면</title>
+    <style>
+        body {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        #userInfo {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        #userInfo ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        #userInfo li {
+            margin-bottom: 10px; /* 약간의 아래쪽 공백 추가 */
+        }
+
+        #productList {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            flex: 4;
+            margin-right: 10px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        #checkoutArea {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            flex: 2; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #checkoutArea::after {
+            content: "";
+            flex: 1;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="userInfo">
+        <h1>대진페이</h1>
+        <h2>환영합니다</h2>
+        <ul>
+            <li id="nameOutput"></li>
+            <li id="schoolOutput"></li>
+            <li id="gradeOutput"></li>
+            <li id="roomOutput"></li>
+            <li id="numberOutput"></li>
+        </ul>
+    </div>
+    
+    <div id="productList">
+        <h2>상품 품목</h2>
+        <!-- 물건 목록이 여기에 나열될 것입니다. -->
+    </div>
+    
+    <div id="checkoutArea">
+        <h2>계산</h2>
+        <!-- 계산 영역 컨텐츠가 여기에 들어갈 것입니다. -->
+    </div>
+
+    <script>
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        if (userInfo) {
+            const nameOutput = document.getElementById('nameOutput');
+            const schoolOutput = document.getElementById('schoolOutput');
+            const gradeOutput = document.getElementById('gradeOutput');
+            const roomOutput = document.getElementById('roomOutput');
+            const numberOutput = document.getElementById('numberOutput');
+
+            nameOutput.textContent = `Name: ${userInfo.name}`;
+            schoolOutput.textContent = `School: ${userInfo.school}`;
+            gradeOutput.textContent = `Grade: ${userInfo.grade}`;
+            roomOutput.textContent = `Room: ${userInfo.room}`;
+            numberOutput.textContent = `Number: ${userInfo.number}`;
+
+            // AJAX 요청을 통해 학생 정보를 연결된 홈페이지로 전송
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/update-student-info', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(userInfo));
+        }
+    </script>
+</body>
+</html>
