@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+</head>
+<body>
+    <h1>QR Code Scanner</h1>
+    <div id="video-container">
+        <video id="video" autoplay></video>
+    </div>
+    <div id="infoContainer" style="display: none;">
+        <p id="nameOutput"></p>
+        <p id="schoolOutput"></p>
+        <p id="gradeOutput"></p>
+        <p id="roomOutput"></p>
+        <p id="numberOutput"></p>
+    </div>
+    <button id="confirmButton" style="display: none;">제가 맞음</button>
+
+    <script src="https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

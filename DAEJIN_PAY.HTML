@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>First Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            min-height: 100vh;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .daejin-pay {
+            /* DAEJIN PAY를 화면 정중앙으로 위치시킴 */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            content: 35px;
+            color: #007bff;
+            margin-bottom: 10px; /* 로그인 버튼과의 간격을 줌 */
+        }
+
+        .additional-text {
+            font-size: 14px;
+            color: #555;
+            margin-top: 0px; /* 조금 아래로 내림 */
+        }
+
+        /* 추가된 스타일 */
+        .g-signin2 {
+            margin-top: -150px; /* 더 위로 올림 */
+            margin-bottom: 20px;
+        }
+    </style>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="165540769232-gl4405v52jpibcpj3s4t8b80m1esjekl.apps.googleusercontent.com">
+</head>
+<body>
+    <div class="content">
+        <p class><img src = "Logo vert.png" width="264" height="125"></p>
+        <p class="additional-text">매점에서 줄서지 않고 간편하게</p>
+    </div>
+    
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    
+    <script>
+        // 사용자가 구글 로그인하면 실행되는 함수
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log("ID: " + profile.getId()); // 사용자 ID
+            console.log("Name: " + profile.getName()); // 사용자 이름
+            console.log("Image URL: " + profile.getImageUrl()); // 사용자 프로필 이미지 URL
+            console.log("Email: " + profile.getEmail()); // 사용자 이메일
+            
+            // 원하는 추가 작업을 수행할 수 있습니다.
+            // 예: 서버로 사용자 정보를 보내거나, 다음 페이지로 리디렉션 등
+            // 이 예제에서는 다음 페이지로 리디렉션하는 예시를 보여줍니다.
+            window.location.href = 'next_page.html';
+        }
+    </script>
+</body>
+</html>
