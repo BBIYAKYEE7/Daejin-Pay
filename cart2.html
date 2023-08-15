@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">                                              
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cart Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .daejin-pay {
+            /* DAEJIN PAY를 화면 상단 중앙에서 왼쪽으로 이동시킴 */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 35px;
+            color: #007bff;
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+
+        .cart-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 70px;
+            width: 100%;
+            max-height: 440px;
+            overflow: auto;
+        }
+
+        .cart-item {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quantity-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .clear-cart-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .checkout-button {
+            /* 기존 스타일 유지 */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            position: absolute;
+            top: 680px;
+            left: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <p class="daejin-pay">DAEJIN PAY</p>
+        <ul class="cart-list" id="cartList"></ul>
+        <button class="clear-cart-button" id="clearCartButton">장바구니 비우기</button>
+        <button class="checkout-button" id="checkoutButton">결제하기</button>
+    </div>
+
+    <script>
+        const cartList = document.getElementById('cartList');
+        const clearCartButton = document.getElementById('clearCartButton');
+        const checkoutButton = document.getElementById('checkoutButton');
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        const itemMap = new Map();
+
+        for (const item of cartItems) {
+            if (itemMap.has(item.name)) {
+                itemMap.set(item.name, itemMap.get(item.name) + 1);
+            } else {
+                itemMap.set(item.name, 1);
+            }
+        }
+
+        for (const [itemName, quantity] of itemMap.entries()) {
+            const listItem = document.createElement('li');
+            listItem.className = 'cart-item';
+
+            const itemNameSpan = document.createElement('span');
+            itemNameSpan.textContent = `${itemName} - ${cartItems.find(item => item.name === itemName).price}원`;
+
+            const quantityButtons = document.createElement('div');
+            quantityButtons.className = 'quantity-buttons';
+
+            const minusButton = document.createElement('button');
+            minusButton.className = 'quantity-button';
+            minusButton.textContent = '-';
+            minusButton.addEventListener('click', function () {
+                if (itemMap.get(itemName) > 1) {
+                    itemMap.set(itemName, itemMap.get(itemName) - 1);
+                    updateCartList();
+                }
+            });
+
+            const quantityDisplay = document.createElement('span');
+            quantityDisplay.textContent = quantity;
+
+            const plusButton = document.createElement('button');
+            plusButton.className = 'quantity-button';
+            plusButton.textContent = '+';
+            plusButton.addEventListener('click', function () {
+                itemMap.set(itemName, itemMap.get(itemName) + 1);
+                updateCartList();
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'quantity-button';
+            deleteButton.textContent = 'x';
+            deleteButton.style.backgroundColor = 'red';
+            deleteButton.style.width = '30px';
+            deleteButton.style.height = '30px';
+            deleteButton.style.borderRadius = '50%';
+            deleteButton.style.fontSize = '16px';
+            deleteButton.style.fontWeight = 'bold';
+            deleteButton.addEventListener('click', function () {
+                itemMap.delete(itemName);
+                updateCartList();
+            });
+
+            quantityButtons.appendChild(minusButton);
+            quantityButtons.appendChild(quantityDisplay);
+            quantityButtons.appendChild(plusButton);
+            quantityButtons.appendChild(deleteButton);
+
+            listItem.appendChild(itemNameSpan);
+            listItem.appendChild(quantityButtons);
+
+            cartList.appendChild(listItem);
+        }
+
+        function updateCartList() {
+            localStorage.setItem('cartItems', JSON.stringify(updateCartItems()));
+            location.reload();
+        }
+
+        function updateCartItems() {
+            const updatedItems = [];
+            for (const [itemName, quantity] of itemMap.entries()) {
+                const item = cartItems.find(item => item.name === itemName);
+                for (let i = 0; i < quantity; i++) {
+                    updatedItems.push(item);
+                }
+            }
+            return updatedItems;
+        }
+
+        clearCartButton.addEventListener('click', function () {
+            localStorage.removeItem('cartItems');
+            location.reload();
+        });
+
+        checkoutButton.addEventListener('click', function () {
+            let totalAmount = 0;
+            let checkoutInfo = '결제 상품 목록:\n';
+
+            for (const [itemName, quantity] of itemMap.entries()) {
+                const item = cartItems.find(item => item.name === itemName);
+                const itemTotal = item.price * quantity;
+                checkoutInfo += `${itemName} - ${item.price}원 x ${quantity}개 = ${itemTotal}원\n`;
+                totalAmount += itemTotal;
+            }
+
+            if (totalAmount === 0) {
+                alert('결제하실 상품이 없습니다.');
+            } else if (totalAmount >= 500) {
+                checkoutInfo += `\n총 결제 금액: ${totalAmount}원\n\n결제하시겠습니까?`;
+                if (confirm(checkoutInfo)) {
+                    // 실제 결제 처리 로직 추가
+                    itemMap.clear();
+                    updateCartList();
+                    alert('결제가 완료되었습니다. 대진페이를 이용해주셔서 감사합니다');
+
+                    localStorage.removeItem('cartItems');
+                    window.location.href = 'shopping_page2.html';
+                }
+            } else {
+                alert('총 결제 금액이 500원 미만입니다. 500원 이상인 경우에만 결제가 가능합니다.');
+            }
+        });
+    </script>
+</body>
+</html>

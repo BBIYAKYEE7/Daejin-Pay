@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment Complete</title>
+    <script src="https://raw.githubusercontent.com/davidshimjs/qrcodejs/master/qrcode.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff; /* 배경색을 흰색으로 설정 */
+            min-height: 100vh;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .daejin-pay {
+            /* DAEJIN PAY를 화면 상단 중앙에서 왼쪽으로 이동시킴 */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 35px;
+            color: #007bff;
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <p class="daejin-pay">DAEJIN PAY</p>
+    </div>
+    <div id="qrcode" style="margin: 20px auto;"></div>
+
+    <script>
+        const qrcode = new QRCode(document.getElementById('qrcode'), {
+            width: 128,
+            height: 128
+        });
+
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        let qrText = '결제 상품 목록:\n';
+
+        for (const item of cartItems) {
+            qrText += `${item.name} - ${item.price}원\n`;
+        }
+
+        qrcode.makeCode(qrText);
+    </script>
+</body>
+</html>

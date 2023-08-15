@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Second Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff; /* 배경색을 흰색으로 설정 */
+            min-height: 100vh;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .daejin-pay {
+            /* DAEJIN PAY를 화면 상단 중앙에서 왼쪽으로 이동시킴 */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 35px;
+            color: #007bff;
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+
+        .product-text {
+            position: absolute;
+            font-size: 20px;
+            color: #555555;
+            top: 100px; /* 절대 위치 상단 여백 */
+            left: 20px; /* 절대 위치 왼쪽 여백 */
+        }
+
+        .cart-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+
+        .add-to-cart-button {
+            /* 기존 스타일 유지 */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 13px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            position: absolute;
+            top: 400px;
+            left: 20px;
+        }
+
+        .checkout-button {
+            /* 기존 스타일 유지 */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 13px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            position: absolute;
+            top: 470px;
+            left: 20px;
+        }
+
+        .button-hover {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .button-hover:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-hover:active {
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <p class="daejin-pay">DAEJIN PAY</p>
+        <p class="product-text">상품 7</p>
+        <button class="cart-button button-hover" id="cartButton">장바구니</button>
+        <button class="add-to-cart-button button-hover" id="addToCartButton">장바구니 담기</button>
+        <button class="checkout-button button-hover" id="checkoutButton">결제하기</button>
+    </div>
+
+    <script>
+        const cartButton = document.getElementById('cartButton');
+        cartButton.addEventListener('click', function() {
+            window.location.href = 'cart2.html'; // 장바구니 페이지로 이동
+        });
+
+        const addToCartButton = document.getElementById('addToCartButton');
+        const checkoutButton = document.getElementById('checkoutButton');
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+        addToCartButton.addEventListener('click', function() {
+            if (!isInCart(cartItems, '상품 7')) {
+                const product = {
+                    name: '상품 7',
+                    price: 10000
+                };
+                cartItems.push(product);
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                if (confirm('상품이 장바구니에 담겼습니다.\n장바구니 페이지로 이동하시겠습니까?')) {
+                    window.location.href = 'shopping_page2.html'; // 이동할 페이지 주소를 정확하게 입력해주세요.
+                }
+            } else {
+                alert('이미 장바구니에 담긴 상품입니다.');
+            }
+        });
+
+        checkoutButton.addEventListener('click', function() {
+            const selectedProduct = '상품 7'; // 선택한 상품명 (수정 필요)
+            const selectedCartItem = cartItems.find(item => item.name === selectedProduct);
+
+            if (selectedCartItem) {
+                const cartInfo = `${selectedCartItem.name} - ${selectedCartItem.price}원 구매하시겠습니까?`;
+                if (confirm(cartInfo)) {
+                    // 여기에 구매 처리 로직을 추가하면 됩니다.
+                    alert('구매가 완료되었습니다.');
+                }
+            } else {
+                const cartInfo = `${selectedProduct} - ${10000}원 구매하시겠습니까?`;
+                if (confirm(cartInfo)) {
+                    // 여기에 구매 처리 로직을 추가하면 됩니다.
+                    alert('구매가 완료되었습니다.');
+                    window.location.href = 'shopping_page2.html'
+                }
+            }
+        });
+
+        function isInCart(cart, itemName) {
+            return cart.some(item => item.name === itemName);
+        }
+    </script>
+</body>
+</html>

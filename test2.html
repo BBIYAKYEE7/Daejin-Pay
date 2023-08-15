@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>First Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            height: 100vh;
+        }
+
+        .content {
+            width: 390px;
+            height: 100vh;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .daejin-pay {
+            /* DAEJIN PAY를 화면 정중앙으로 위치시킴 */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 35px;
+            color: #007bff;
+            margin-bottom: 10px; /* 버튼과의 간격을 줌 */
+            z-index: 1; /* z-index 값을 설정하여 위에 표시되도록 함 */
+        }
+
+        .additional-text {
+            font-size: 14px;
+            color: #555;
+            margin-top: 150px; /* 조금 아래로 내림 */
+        }
+
+        /* 추가된 스타일 */
+        .btn-student-auth {
+            margin-top: -60px; /* 버튼의 위치 조정 */
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 2; /* z-index 값을 설정하여 위에 표시되도록 함 */
+            border-radius: 20px;
+        }
+
+        .btn-student-auth:hover {
+            background-color: #0056b3;
+        }
+
+        .g-signin2 {
+            margin-top: 0px; /* 조금 아래로 내림 */
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <p class="daejin-pay">DAEJIN PAY</p>
+        <p class="additional-text">매점에서 줄서지 않고 간편하게</p>
+    </div>
+    
+    <button class="btn-student-auth" onclick="goToNextPage()">일산대진고 학생 인증하기</button>
+    
+    <script>
+        // 버튼을 클릭하면 다음 페이지로 이동하는 함수
+        function goToNextPage() {
+            window.location.href = 'next_page.html';
+        }
+    </script>
+</body>
+</html>

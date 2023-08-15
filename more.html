@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>3rd Shopping Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 390px;
+            height: 100vh;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .daejin-pay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 35px;
+            color: #007bff;
+            margin-bottom: 10px;
+            z-index: 1;
+        }
+
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: -15%;
+        }
+
+        .product-box {
+            width: 100px;
+            height: 120px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            position: relative;
+        }
+
+        .buy-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .cart-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <p class="daejin-pay">DAEJIN PAY</p>
+        
+        <div class="product-container">
+            <div class="product-box">
+                <div>상품 1</div>
+                <button class="buy-button" onclick="addToCart('상품 1')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 2</div>
+                <button class="buy-button" onclick="addToCart('상품 2')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 3</div>
+                <button class="buy-button" onclick="addToCart('상품 3')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 4</div>
+                <button class="buy-button" onclick="addToCart('상품 4')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 5</div>
+                <button class="buy-button" onclick="addToCart('상품 5')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 6</div>
+                <button class="buy-button" onclick="addToCart('상품 6')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 7</div>
+                <button class="buy-button" onclick="addToCart('상품 7')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 8</div>
+                <button class="buy-button" onclick="addToCart('상품 8')">구매하기</button>
+            </div>
+            <div class="product-box">
+                <div>상품 9</div>
+                <button class="buy-button" onclick="addToCart('상품 9')">구매하기</button>
+            </div>
+        </div>
+        
+        <button class="cart-button" id="cartButton">장바구니</button>
+    </div>
+
+    <script>
+        const cartButton = document.getElementById('cartButton');
+        const productBoxes = document.querySelectorAll('.product-box');
+
+        const cartItems = [];
+
+        productBoxes.forEach((box, index) => {
+            const productName = `Product ${index + 1}`;
+            const buyButton = box.querySelector('.buy-button');
+
+            buyButton.addEventListener('click', () => {
+                cartItems.push(productName);
+                console.log(`Added ${productName} to cart. Cart now contains:`, cartItems);
+            });
+        });
+
+        cartButton.addEventListener('click', function() {
+            // 장바구니 페이지로 이동하는 코드
+            window.location.href = 'cart2.html';
+        });
+
+        function addToCart(productName) {
+            cartItems.push(productName);
+            alert(`${productName}이(가) 장바구니에 추가되었습니다.`);
+        }
+    </script>
+</body>
+</html>
