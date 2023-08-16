@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">                                              
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cart Page</title>
     <style>
@@ -31,7 +32,6 @@
         }
 
         .daejin-pay {
-            /* DAEJIN PAY를 화면 상단 중앙에서 왼쪽으로 이동시킴 */
             position: absolute;
             top: 20px;
             left: 20px;
@@ -91,7 +91,6 @@
         }
 
         .checkout-button {
-            /* 기존 스타일 유지 */
             background-color: #007bff;
             color: white;
             border: none;
@@ -100,11 +99,13 @@
             cursor: pointer;
             font-size: 14px;
             position: absolute;
-            top: 680px;
-            left: center;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
+
 <body>
     <div class="content">
         <p class="daejin-pay">DAEJIN PAY</p>
@@ -120,6 +121,17 @@
         const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         const itemMap = new Map();
 
+        function updateCartItemUI(itemName) {
+            const cartItem = cartList.querySelector(`[data-item="${itemName}"]`);
+            if (cartItem) {
+                const quantityDisplay = cartItem.querySelector('.quantity-display');
+                const item = cartItems.find(item => item.name === itemName);
+                const quantity = itemMap.get(itemName);
+
+                quantityDisplay.textContent = quantity;
+            }
+        }
+
         for (const item of cartItems) {
             if (itemMap.has(item.name)) {
                 itemMap.set(item.name, itemMap.get(item.name) + 1);
@@ -131,6 +143,7 @@
         for (const [itemName, quantity] of itemMap.entries()) {
             const listItem = document.createElement('li');
             listItem.className = 'cart-item';
+            listItem.dataset.item = itemName;
 
             const itemNameSpan = document.createElement('span');
             itemNameSpan.textContent = `${itemName} - ${cartItems.find(item => item.name === itemName).price}원`;
@@ -144,11 +157,12 @@
             minusButton.addEventListener('click', function () {
                 if (itemMap.get(itemName) > 1) {
                     itemMap.set(itemName, itemMap.get(itemName) - 1);
-                    updateCartList();
+                    updateCartItemUI(itemName);
                 }
             });
 
             const quantityDisplay = document.createElement('span');
+            quantityDisplay.className = 'quantity-display';
             quantityDisplay.textContent = quantity;
 
             const plusButton = document.createElement('button');
@@ -156,7 +170,7 @@
             plusButton.textContent = '+';
             plusButton.addEventListener('click', function () {
                 itemMap.set(itemName, itemMap.get(itemName) + 1);
-                updateCartList();
+                updateCartItemUI(itemName);
             });
 
             const deleteButton = document.createElement('button');
@@ -186,7 +200,64 @@
 
         function updateCartList() {
             localStorage.setItem('cartItems', JSON.stringify(updateCartItems()));
-            location.reload();
+            cartList.innerHTML = ''; // Clear the list before re-rendering
+            for (const [itemName, quantity] of itemMap.entries()) {
+                const listItem = document.createElement('li');
+                listItem.className = 'cart-item';
+                listItem.dataset.item = itemName;
+
+                const itemNameSpan = document.createElement('span');
+                itemNameSpan.textContent = `${itemName} - ${cartItems.find(item => item.name === itemName).price}원`;
+
+                const quantityButtons = document.createElement('div');
+                quantityButtons.className = 'quantity-buttons';
+
+                const minusButton = document.createElement('button');
+                minusButton.className = 'quantity-button';
+                minusButton.textContent = '-';
+                minusButton.addEventListener('click', function () {
+                    if (itemMap.get(itemName) > 1) {
+                        itemMap.set(itemName, itemMap.get(itemName) - 1);
+                        updateCartItemUI(itemName);
+                    }
+                });
+
+                const quantityDisplay = document.createElement('span');
+                quantityDisplay.className = 'quantity-display';
+                quantityDisplay.textContent = quantity;
+
+                const plusButton = document.createElement('button');
+                plusButton.className = 'quantity-button';
+                plusButton.textContent = '+';
+                plusButton.addEventListener('click', function () {
+                    itemMap.set(itemName, itemMap.get(itemName) + 1);
+                    updateCartItemUI(itemName);
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.className = 'quantity-button';
+                deleteButton.textContent = 'x';
+                deleteButton.style.backgroundColor = 'red';
+                deleteButton.style.width = '30px';
+                deleteButton.style.height = '30px';
+                deleteButton.style.borderRadius = '50%';
+                deleteButton.style.fontSize = '16px';
+                deleteButton.style.fontWeight = 'bold';
+                deleteButton.addEventListener('click', function () {
+                    itemMap.delete(itemName);
+                    updateCartList();
+                });
+
+                quantityButtons.appendChild(minusButton);
+                quantityButtons.appendChild(quantityDisplay);
+                quantityButtons.appendChild(plusButton);
+                quantityButtons.appendChild(deleteButton);
+
+                listItem.appendChild(itemNameSpan);
+                listItem.appendChild(quantityButtons);
+
+                cartList.appendChild(listItem);
+            }
         }
 
         function updateCartItems() {
@@ -202,7 +273,10 @@
 
         clearCartButton.addEventListener('click', function () {
             localStorage.removeItem('cartItems');
-            location.reload();
+            itemMap.clear();
+            updateCartList();
+            alert('장바구니에 담긴 상품을 삭제합니다');
+            window.location.href = 'shopping_page2.html';
         });
 
         checkoutButton.addEventListener('click', function () {
@@ -225,14 +299,44 @@
                     itemMap.clear();
                     updateCartList();
                     alert('결제가 완료되었습니다. 대진페이를 이용해주셔서 감사합니다');
-
                     localStorage.removeItem('cartItems');
-                    window.location.href = 'shopping_page2.html';
+
+                    const qrCodeData = JSON.stringify({ checkoutInfo, totalAmount });
+
+                    fetch('http://localhost:5500/api/generateQRCode', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ qrCodeData }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const qrCodeImage = new Image();
+                            qrCodeImage.src = data.qrCode;
+
+                            const qrCodeContainer = document.createElement('div');
+                            qrCodeContainer.appendChild(qrCodeImage);
+
+                            // QR 코드가 표시될 위치를 찾아서 교체
+                            const content = document.querySelector('.content');
+                            content.insertBefore(qrCodeContainer, checkoutButton.nextSibling);
+                        })
+                        .catch(error => {
+                            console.error('QR 코드 생성 에러:', error);
+                        });
+
+                        setTimeout(function () {
+                            window.location.href = 'next_page.html';
+                        }, 300000); // 5분(300,000 밀리초) 후에 payment_complete.html 페이지로 이동
+                        
                 }
             } else {
                 alert('총 결제 금액이 500원 미만입니다. 500원 이상인 경우에만 결제가 가능합니다.');
             }
         });
+
     </script>
 </body>
+
 </html>

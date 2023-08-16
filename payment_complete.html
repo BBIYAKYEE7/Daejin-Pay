@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Payment Complete</title>
-    <script src="https://raw.githubusercontent.com/davidshimjs/qrcodejs/master/qrcode.min.js"></script>
-
     <style>
         body {
             margin: 0;
@@ -14,7 +12,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background-color: #ffffff; /* 배경색을 흰색으로 설정 */
+            background-color: #ffffff;
             min-height: 100vh;
         }
 
@@ -33,7 +31,6 @@
         }
 
         .daejin-pay {
-            /* DAEJIN PAY를 화면 상단 중앙에서 왼쪽으로 이동시킴 */
             position: absolute;
             top: 20px;
             left: 20px;
@@ -48,22 +45,39 @@
     <div class="content">
         <p class="daejin-pay">DAEJIN PAY</p>
     </div>
-    <div id="qrcode" style="margin: 20px auto;"></div>
+    <div id="qrCodeContainer"></div>
 
     <script>
-        const qrcode = new QRCode(document.getElementById('qrcode'), {
-            width: 128,
-            height: 128
-        });
-
         const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        let qrText = '결제 상품 목록:\n';
+        let totalAmount = 0;
+        let checkoutInfo = '결제 상품 목록:\n';
 
         for (const item of cartItems) {
-            qrText += `${item.name} - ${item.price}원\n`;
+            const itemTotal = item.price * item.quantity;
+            checkoutInfo += `${item.name} - ${item.price}원 x ${item.quantity}개 = ${itemTotal}원\n`;
+            totalAmount += itemTotal;
         }
 
-        qrcode.makeCode(qrText);
+        const qrCodeData = JSON.stringify({ checkoutInfo, totalAmount });
+
+        fetch('http://localhost:5500/api/generateQRCode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ qrCodeData }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            const qrCodeImage = new Image();
+            qrCodeImage.src = data.qrCode;
+
+            const qrCodeContainer = document.getElementById('qrCodeContainer');
+            qrCodeContainer.appendChild(qrCodeImage);
+        })
+        .catch(error => {
+            console.error('QR 코드 생성 에러:', error);
+        });
     </script>
 </body>
 </html>
