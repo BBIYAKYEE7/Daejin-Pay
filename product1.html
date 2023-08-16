@@ -108,7 +108,7 @@
 </head>
 <body>
     <div class="content">
-        <p class="daejin-pay">DAEJIN PAY</p>
+        <p class><img src="Logo.png" width="182" height="33" style="position: absolute; left: 35px; top: 67px;"></p>
         <p class="product-text">상품 1</p>
         <button class="cart-button button-hover" id="cartButton">장바구니</button>
         <button class="add-to-cart-button button-hover" id="addToCartButton">장바구니 담기</button>
@@ -134,7 +134,7 @@
                 cartItems.push(product);
                 localStorage.setItem('cartItems', JSON.stringify(cartItems));
                 if (confirm('상품이 장바구니에 담겼습니다.\n장바구니 페이지로 이동하시겠습니까?')) {
-                    window.location.href = 'shopping_page2.html'; // 이동할 페이지 주소를 정확하게 입력해주세요.
+                    window.location.href = 'shopping_page.html'; // 이동할 페이지 주소를 정확하게 입력해주세요.
                 }
             } else {
                 alert('이미 장바구니에 담긴 상품입니다.');
@@ -156,7 +156,7 @@
                 if (confirm(cartInfo)) {
                     // 여기에 구매 처리 로직을 추가하면 됩니다.
                     alert('구매가 완료되었습니다.');
-                    window.location.href = 'shopping_page2.html'
+                    window.location.href = 'shopping_page.html'
                 }
             }
         });
